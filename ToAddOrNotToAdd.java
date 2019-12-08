@@ -154,11 +154,11 @@ public class ToAddOrNotToAdd {
 				m = (l + r) / 2;
 				long x, y;
 				if (m - 1 < 0)
-					x = (arr[i] * (i - m)) - (psum[i - 1]);
+					x = (arr[i] * Long.valueOf(i - m)) - (psum[i - 1]);
 				else
-					x = (arr[i] * (i - m)) - (psum[i - 1] - psum[m - 1]);
+					x = (arr[i] * Long.valueOf(i - m)) - (psum[i - 1] - psum[m - 1]);
 //				System.out.println(x + "      " + l + "  " + r);
-				if (x > k && (arr[i] * (i - m - 1)) - (psum[i - 1] - psum[m]) <= k) {
+				if (x > k && (arr[i] * Long.valueOf(i - m - 1)) - (psum[i - 1] - psum[m]) <= k) {
 					m = m + 1;
 					break;
 				}
