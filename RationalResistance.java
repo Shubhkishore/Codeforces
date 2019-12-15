@@ -112,18 +112,17 @@ public class RationalResistance {
 
 	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
-		long a, b;
+		long t, ans = 0, a, b;
 		a = in.nextLong();
 		b = in.nextLong();
-		if (b - a == 1) {
-			System.out.println(b);
-			return;
-		}
-		if (a == 1 && b == 1) {
-			System.out.println("1");
-			return;
-		}
-		long ans = a / b;
+		do {
+			ans += a / b;
+			a %= b;
+			t = a;
+			a = b;
+			b = t;
+		} while (b != 0);
+		System.out.println(ans);
 
 	}
 }
