@@ -1,8 +1,8 @@
-package Dr;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class DrEvilUnderscores {
 	static int mod = 1000000007;
@@ -116,19 +116,29 @@ public class DrEvilUnderscores {
 		Reader in = new Reader();
 		int i, t, n;
 		n = in.nextInt();
-		int arr[] = new int[n];
-		int xors[] = new int[n];
-		int lr = 31, max = Integer.MIN_VALUE;
-		for (i = 0; i < n; i++) {
-			arr[i] = in.nextInt();
-			if (lr > (int) ((Math.log10(arr[i] & -arr[i])) / Math.log10(2)) + 1)
-				lr = (int) ((Math.log10(arr[i] & -arr[i])) / Math.log10(2)) + 1;
+		ArrayList<Integer> arr = new ArrayList<>();
+		for (i = 0; i < n; i++)
+			arr.add(in.nextInt());
+//		System.out.println(arr);
+		System.out.println(recur(arr, 30));
+	}
+
+	private static int recur(ArrayList<Integer> arr, int bit) {
+		if (arr.size() == 0 || bit < 0)
+			return 0;
+		ArrayList<Integer> on = new ArrayList<>();
+		ArrayList<Integer> off = new ArrayList<>();
+		for (int x : arr) {
+			if (((x >> bit) & 1) == 0)
+				off.add(x);
+			else
+				on.add(x);
 		}
-		int x = 1 << (lr - 1);
-		System.out.println(x);
-		for (i = 0; i < n; i++) {
-			max = Math.max(max, arr[i] ^ x);
-		}
-		System.out.println(max);
+//		System.out.println(bit + " " + on + " " + off);
+		if (on.size() == 0)
+			return recur(off, bit - 1);
+		if (off.size() == 0)
+			return recur(on, bit - 1);
+		return Math.min(recur(on, bit - 1), recur(off, bit - 1)) + (1 << bit);
 	}
 }
