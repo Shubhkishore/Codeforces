@@ -1,6 +1,8 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InfinitePrefixes {
 	static int mod = 1000000007;
@@ -24,7 +26,7 @@ public class InfinitePrefixes {
 		}
 
 		public String readLine() throws IOException {
-			byte[] buf = new byte[10005]; // line length
+			byte[] buf = new byte[999999]; // line length
 			int cnt = 0, c;
 			while ((c = read()) != -1) {
 				if (c == '\n')
@@ -112,12 +114,50 @@ public class InfinitePrefixes {
 
 	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
-		int i, t, n;
-		n = in.nextInt();
+		int i, t, n, x;
 		t = in.nextInt();
 		StringBuilder ans = new StringBuilder();
+		String s;
 		while (t-- > 0) {
+			n = in.nextInt();
+			x = in.nextInt();
+			in.readLine();
+			s = in.readLine().substring(0, n);
+			int lastCnt, zeroes, cnts, no, nz;
+			lastCnt = zeroes = cnts = no = nz = 0;
+			Map<Integer, Integer> mp = new HashMap<>();
+			for (char ch : s.toCharArray()) {
+				if (ch == '0')
+					nz++;
+				else
+					no++;
+				mp.put(nz - no, mp.getOrDefault(nz - no, 0) + 1);
+			}
 
+			lastCnt = nz - no;
+//			System.out.println(mp + " " + lastCnt);
+			if (lastCnt == 0) {
+//				System.out.println(mp.keySet());
+				if (mp.keySet().contains(x))
+					ans.append("-1\n");
+				else
+					ans.append((x == 0 ? 1 : 0) + "\n");
+				continue;
+
+			}
+			int answer = 0;
+			for (Map.Entry<Integer, Integer> iterator : mp.entrySet()) {
+				int k = iterator.getKey();
+				int v = iterator.getValue();
+				if ((x - k) % lastCnt == 0 && (x - k) / lastCnt >= 0) {
+					answer += v;
+				}
+			}
+
+			if (x == 0) {
+				answer++;
+			}
+			ans.append(answer + "\n");
 		}
 		System.out.println(ans);
 	}
