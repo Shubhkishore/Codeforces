@@ -2,7 +2,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class VasyaAndRobot {
+public class Flowers {
 	static int mod = 1000000007;
 
 	static class Reader {
@@ -110,36 +110,29 @@ public class VasyaAndRobot {
 		}
 	}
 
+	static int size = 100005;
+
 	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
-		int i, t, n;
-		long l, r, ql, qr, ans = Integer.MAX_VALUE;
-		n = in.nextInt();
-		l = in.nextLong();
-		r = in.nextLong();
-		ql = in.nextLong();
-		qr = in.nextLong();
-		Object v = new VasyaAndRobot();
-		System.out.println(v.getClass().getCanonicalName());
-		if (v instanceof VasyaAndRobot)
-			System.out.println("fuck yeah");
-		int arr[] = new int[n + 1];
-		long tsum = 0, curSum = 0, lsum = 0, rsum = 0;
-		for (i = 1; i <= n; i++) {
-			arr[i] = in.nextInt();
-			tsum += arr[i];
+		int a, b, i, t, n, k;
+		t = in.nextInt();
+		k = in.nextInt();
+		long dp[] = new long[size];
+		for (i = 1; i <= k - 1; i++)
+			dp[i] = 1;
+		dp[k] = 2;
+		for (i = k + 1; i < size; i++)
+			dp[i] = (dp[i - 1] % mod + dp[i - k] % mod) % mod;
+		for (i = 1; i < size; i++)
+			dp[i] = (dp[i] % mod + dp[i - 1] % mod) % mod;
+		StringBuilder ans = new StringBuilder();
+//		System.out.println(Arrays.toString(dp));
+		while (t-- > 0) {
+			a = in.nextInt();
+			b = in.nextInt();
+			long x = (dp[b] - dp[a - 1] + mod) % mod;
+			ans.append(x + "\n");
 		}
-		for (i = 1; i <= n - 1; i++) {
-			curSum += arr[i];
-			lsum = curSum * l;
-			rsum = (tsum - curSum) * r;
-			if (i < n / 2)
-				rsum += (n - 2 * (i) - 1) * qr;
-			else if (i > n / 2)
-				lsum += (2 * (i) - n - 1) * ql;
-			ans = Math.min(ans, lsum + rsum);
-		}
-		ans = Math.min(ans, Math.min(tsum * l + (n - 1) * ql, tsum * r + (n - 1) * qr));
 		System.out.println(ans);
 	}
 }

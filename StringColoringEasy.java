@@ -1,8 +1,9 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
-public class VasyaAndRobot {
+public class StringColoringEasy {
 	static int mod = 1000000007;
 
 	static class Reader {
@@ -113,33 +114,31 @@ public class VasyaAndRobot {
 	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
 		int i, t, n;
-		long l, r, ql, qr, ans = Integer.MAX_VALUE;
 		n = in.nextInt();
-		l = in.nextLong();
-		r = in.nextLong();
-		ql = in.nextLong();
-		qr = in.nextLong();
-		Object v = new VasyaAndRobot();
-		System.out.println(v.getClass().getCanonicalName());
-		if (v instanceof VasyaAndRobot)
-			System.out.println("fuck yeah");
-		int arr[] = new int[n + 1];
-		long tsum = 0, curSum = 0, lsum = 0, rsum = 0;
-		for (i = 1; i <= n; i++) {
-			arr[i] = in.nextInt();
-			tsum += arr[i];
+		in.readLine();
+		String s = in.readLine().substring(0, n);
+//		int 
+		char ch, prevCh;
+		StringBuilder lex = new StringBuilder();
+		String ans[] = new String[n];
+		Arrays.fill(ans, "0");
+		boolean swapped[] = new boolean[26];
+		prevCh = s.charAt(0);
+		for (i = 1; i < n; i++) {
+			ch = s.charAt(i);
+			if (ch < prevCh) {
+				ans[i] = "1";
+				check(s, i, swapped, lex.toString());
+			}
 		}
-		for (i = 1; i <= n - 1; i++) {
-			curSum += arr[i];
-			lsum = curSum * l;
-			rsum = (tsum - curSum) * r;
-			if (i < n / 2)
-				rsum += (n - 2 * (i) - 1) * qr;
-			else if (i > n / 2)
-				lsum += (2 * (i) - n - 1) * ql;
-			ans = Math.min(ans, lsum + rsum);
+		System.out.println(String.join(" ", ans));
+	}
+
+	private static void check(String s, int pos, boolean[] swapped, String lex) {
+		// TODO Auto-generated method stub
+		char ch = s.charAt(pos);
+		for (int i = pos - 1; i >= 0 && lex.charAt(i) > ch; i--) {
+//			if()
 		}
-		ans = Math.min(ans, Math.min(tsum * l + (n - 1) * ql, tsum * r + (n - 1) * qr));
-		System.out.println(ans);
 	}
 }
