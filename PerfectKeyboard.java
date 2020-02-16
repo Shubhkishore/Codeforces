@@ -1,10 +1,9 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
 
-public class Hyperset {
+public class PerfectKeyboard {
 	static int mod = 1000000007;
 
 	static class Reader {
@@ -112,40 +111,87 @@ public class Hyperset {
 		}
 	}
 
+	static class Node {
+		char data;
+		Node previous;
+		Node next;
+
+		public Node(char data) {
+			this.data = data;
+		}
+
+	}
+
 	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
-		int i, j, t, n, k;
-		n = in.nextInt();
-		k = in.nextInt();
+		int i, t, n;
+		t = in.nextInt();
 		in.readLine();
-		String card[] = new String[n];
-		String ip;
-		Map<String, Integer> mp = new HashMap<>();
-		for (i = 0; i < n; i++) {
-			ip = in.readLine();
-			card[i] = ip.substring(0, ip.length() - 1);
-			mp.put(card[i], i);
-		}
-		char a, b, c = '\0';
-		long ans = 0;
-		for (i = 0; i < n - 2; i++) {
-			for (j = i + 1; j < n - 1; j++) {
-				StringBuilder x = new StringBuilder();
-				for (t = 0; t < k; t++) {
-					a = card[i].charAt(t);
-					b = card[j].charAt(t);
-					if (a == b)
-						c = a;
-					else if (a != 'S' && b != 'S')
-						c = 'S';
-					else if (a != 'E' && b != 'E')
-						c = 'E';
-					else if (a != 'T' && b != 'T')
-						c = 'T';
-					x.append(String.valueOf(c));
+		StringBuilder ans = new StringBuilder();
+		String s;
+		outer: while (t-- > 0) {
+			s = in.readLine();
+			s = s.substring(0, s.length() - 1);
+			n = s.length();
+			Node head = new Node(s.charAt(0));
+			LinkedList<Character> ll = new LinkedList<>();
+			Node pre[] = new Node[26];
+			pre[s.charAt(0) - 'a'] = head;
+			char c;
+			for (i = 1; i < n - 1; i++) {
+				c = s.charAt(i);
+//				System.out.println(c);
+				int idx = c - 'a';
+				if (pre[idx] == null)
+					pre[idx] = new Node(c);
+				if (pre[idx].previous == null && pre[idx].next != null && pre[idx].next.data != s.charAt(i - 1))
+					pre[idx].previous = pre[s.charAt(i - 1) - 'a'];
+				if (pre[idx].next == null && pre[s.charAt(i - 1) - 'a'].data != s.charAt(i + 1))
+					pre[idx].next = pre[s.charAt(i + 1) - 'a'] == null
+							? pre[s.charAt(i + 1) - 'a'] = new Node(s.charAt(i + 1))
+							: pre[s.charAt(i + 1) - 'a'];
+				Node nn = pre[s.charAt(i + 1) - 'a'];
+				Node pp = pre[s.charAt(i - 1) - 'a'];
+//				if (c != nn.data && c != pp.data) {
+//					ans.append("NO\n");
+//					continue outer;
+//				}
+			}
+//			System.out.println("fdfaf");
+			Node curr = head;
+			boolean flag = false;
+			while (curr.next != null) {
+				if (curr == head) {
+					flag = true;
+					break;
 				}
-				if (mp.getOrDefault(x.toString(), -1) > j)
-					ans++;
+				curr = curr.next;
+			}
+			if (flag)
+				ans.append("NO\n");
+			else {
+				ans.append("YES\n");
+				StringBuilder temp = new StringBuilder();
+				curr = head;
+//				System.out.println(curr.data + " " + curr.previous.data);
+				while (curr.previous != null) {
+					curr = curr.previous;
+//					System.out.println("fed");
+				}
+				while (curr.next != null) {
+//					System.out.println("wtf");
+					temp.append(curr.data);
+					curr = curr.next;
+				}
+//				System.out.println("***");
+				boolean alph[] = new boolean[26];
+				for (i = 0; i < temp.length(); i++)
+					alph[temp.charAt(i) - 'a'] = true;
+				for (i = 0; i < 26; i++) {
+					if (!alph[i])
+						temp.append((char) (i + 'a'));
+				}
+				ans.append(temp.toString() + "\n");
 			}
 		}
 		System.out.println(ans);

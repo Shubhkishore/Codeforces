@@ -1,10 +1,8 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class Hyperset {
+public class MotaracksBirthday {
 	static int mod = 1000000007;
 
 	static class Reader {
@@ -114,39 +112,49 @@ public class Hyperset {
 
 	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
-		int i, j, t, n, k;
-		n = in.nextInt();
-		k = in.nextInt();
-		in.readLine();
-		String card[] = new String[n];
-		String ip;
-		Map<String, Integer> mp = new HashMap<>();
-		for (i = 0; i < n; i++) {
-			ip = in.readLine();
-			card[i] = ip.substring(0, ip.length() - 1);
-			mp.put(card[i], i);
-		}
-		char a, b, c = '\0';
-		long ans = 0;
-		for (i = 0; i < n - 2; i++) {
-			for (j = i + 1; j < n - 1; j++) {
-				StringBuilder x = new StringBuilder();
-				for (t = 0; t < k; t++) {
-					a = card[i].charAt(t);
-					b = card[j].charAt(t);
-					if (a == b)
-						c = a;
-					else if (a != 'S' && b != 'S')
-						c = 'S';
-					else if (a != 'E' && b != 'E')
-						c = 'E';
-					else if (a != 'T' && b != 'T')
-						c = 'T';
-					x.append(String.valueOf(c));
+		int i, t, n;
+		t = in.nextInt();
+		StringBuilder ans = new StringBuilder();
+		while (t-- > 0) {
+			n = in.nextInt();
+			int arr[] = new int[n + 1];
+			for (i = 1; i <= n; i++)
+				arr[i] = in.nextInt();
+//			arr[0] = -1;
+			int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, diff = Integer.MIN_VALUE;
+			for (i = 1; i <= n - 1; i++) {
+				if (arr[i] == -1 && arr[i + 1] != -1) {
+					min = arr[i + 1] < min ? arr[i + 1] : min;
+					max = arr[i + 1] > max ? arr[i + 1] : max;
+				} else if (arr[i] != -1 && arr[i + 1] == -1) {
+					min = arr[i] < min ? arr[i] : min;
+					max = arr[i] > max ? arr[i] : max;
 				}
-				if (mp.getOrDefault(x.toString(), -1) > j)
-					ans++;
+				if (arr[i] != -1 && arr[i + 1] != -1)
+					diff = Math.max(Math.abs(arr[i] - arr[i + 1]), diff);
 			}
+//			System.out.println(min + " " + max);
+			if (arr[n] == -1 && arr[n - 1] != -1) {
+				min = arr[n - 1] < min ? arr[n - 1] : min;
+				max = arr[n - 1] > max ? arr[n - 1] : max;
+			} else if (arr[n] != -1 && arr[n - 1] == -1) {
+				min = arr[n] < min ? arr[n] : min;
+				max = arr[n] > max ? arr[n] : max;
+			} else if (arr[n] != -1 && arr[n - 1] != -1) {
+				diff = Math.max(Math.abs(arr[n] - arr[n - 1]), diff);
+			}
+//			System.out.println(diff);
+			if (min == Integer.MAX_VALUE || max == Integer.MIN_VALUE) {
+				ans.append("0 96\n");
+				continue;
+			}
+//			System.out.println(min + " " + max);
+			int x = (min + max) / 2;
+			if (diff == Integer.MAX_VALUE)
+				diff = max - x;
+			else
+				diff = (Math.max(diff, max - x));
+			ans.append(diff + " " + x + "\n");
 		}
 		System.out.println(ans);
 	}

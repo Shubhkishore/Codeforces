@@ -1,10 +1,8 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class Hyperset {
+public class Matrix {
 	static int mod = 1000000007;
 
 	static class Reader {
@@ -114,38 +112,17 @@ public class Hyperset {
 
 	public static void main(String[] args) throws IOException {
 		Reader in = new Reader();
-		int i, j, t, n, k;
-		n = in.nextInt();
-		k = in.nextInt();
+		int j, a, i, t, n;
+		a = in.nextInt();
 		in.readLine();
-		String card[] = new String[n];
-		String ip;
-		Map<String, Integer> mp = new HashMap<>();
+		String s = in.readLine();
+		s = s.substring(0, s.length());
+		StringBuilder ans = new StringBuilder();
+		n = s.length();
+		long val[][] = new long[n][n];
 		for (i = 0; i < n; i++) {
-			ip = in.readLine();
-			card[i] = ip.substring(0, ip.length() - 1);
-			mp.put(card[i], i);
-		}
-		char a, b, c = '\0';
-		long ans = 0;
-		for (i = 0; i < n - 2; i++) {
-			for (j = i + 1; j < n - 1; j++) {
-				StringBuilder x = new StringBuilder();
-				for (t = 0; t < k; t++) {
-					a = card[i].charAt(t);
-					b = card[j].charAt(t);
-					if (a == b)
-						c = a;
-					else if (a != 'S' && b != 'S')
-						c = 'S';
-					else if (a != 'E' && b != 'E')
-						c = 'E';
-					else if (a != 'T' && b != 'T')
-						c = 'T';
-					x.append(String.valueOf(c));
-				}
-				if (mp.getOrDefault(x.toString(), -1) > j)
-					ans++;
+			for (j = 0; j < n; j++) {
+				val[i][j] = Long.valueOf(s.charAt(i)) * Long.valueOf(s.charAt(j));
 			}
 		}
 		System.out.println(ans);
